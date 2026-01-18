@@ -1,0 +1,5 @@
+neovim-bin = "evim"
+
+[font]
+normal = ["MonaspiceAr Nerd Font Mono"]
+size = 11.0

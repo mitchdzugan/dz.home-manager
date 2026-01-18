@@ -1,0 +1,199 @@
+{ zn-nix, mitch-utils, nvim-config, ... }:
+{ config, lib, pkgs, ... }:
+
+let
+  system = pkgs.system;
+  zn = zn-nix.mk-zn system;
+  fontPkgs = [
+    pkgs.font-awesome
+    pkgs.monaspace
+    pkgs.liberation_ttf
+    pkgs.nerd-fonts.monaspace
+    pkgs.nerd-fonts.ubuntu-mono
+    pkgs.nerd-fonts.comic-shanns-mono
+    pkgs.nerd-fonts.shure-tech-mono
+    pkgs.nerd-fonts.recursive-mono
+    pkgs.nerd-fonts.proggy-clean-tt
+    pkgs.nerd-fonts.profont
+    pkgs.nerd-fonts.open-dyslexic
+    pkgs.nerd-fonts.monofur
+    pkgs.nerd-fonts.lilex
+    pkgs.nerd-fonts.hurmit
+    pkgs.nerd-fonts.gohufont
+    pkgs.nerd-fonts.fantasque-sans-mono
+    pkgs.nerd-fonts.daddy-time-mono
+    pkgs.nerd-fonts.bigblue-terminal
+    pkgs.nerd-fonts.agave
+    pkgs.nerd-fonts._3270
+    pkgs.ubuntu-classic
+  ];
+in {
+  home.username = "dz";
+  home.homeDirectory = "/home/dz";
+  home.stateVersion = "25.11"; # Please read the comment before changing.
+  home.packages = with pkgs; fontPkgs ++ [
+    bat
+    direnv
+    emacs
+    fd
+    fennel-ls
+    fzf
+    gh
+    github-desktop
+    google-cloud-sdk
+    grc
+    jq
+    just
+    nixd
+    nixfmt
+    rlwrap
+    rofi
+    typescript-language-server
+    lua-language-server
+    (luajit.withPackages (luaPackages: with luaPackages; [
+      busted
+      fennel
+    ]))
+    (mitch-utils.mkFnlFmt pkgs.luajit)
+    (mitch-utils.mkNixWork pkgs)
+    (zn.writeBashScriptBin "bvim" ''
+      vimRunDir="$(pwd)"
+      ${nvim-config.mkShellHook pkgs}
+      export DZ_NVIM_CONFIG_USE_LOCAL=yes
+      export DZ_NVIM_CONFIG_MACRO_PATH="$FENNEL_MACRO_PATH"
+      export DZ_NVIM_CONFIG_FENNEL_PATH="$DZ_NVIM_CONFIG_CHECKOUT_PATH/src/?.fnl"
+      export DZ_NVIM_CONFIG_LUA_PATH_EXTRA="$LUA_PATH_EXTRA;$DZ_NVIM_CONFIG_CHECKOUT_PATH/src/?.fnl"
+      bash
+    '')
+    (zn.writeBashScriptBin "evim" ''
+      vimRunDir="$(pwd)"
+      ${nvim-config.mkShellHook pkgs}
+      if [[ "$DZ_NVIM_CONFIG_USE_LOCAL" != "no" ]]; then
+        export DZ_NVIM_CONFIG_USE_LOCAL=yes
+      fi
+      export DZ_NVIM_CONFIG_MACRO_PATH="$FENNEL_MACRO_PATH"
+      export DZ_NVIM_CONFIG_FENNEL_PATH="$DZ_NVIM_CONFIG_CHECKOUT_PATH/src/?.fnl"
+      export DZ_NVIM_CONFIG_LUA_PATH_EXTRA="$LUA_PATH_EXTRA;$DZ_NVIM_CONFIG_CHECKOUT_PATH/src/?.fnl"
+      cd "$vimRunDir"
+      nvim "$@"
+    '')
+    (zn.writeBashScriptBin "lvim" ''
+      export DZ_NVIM_CONFIG_USE_LOCAL=no
+      evim "$@"
+    '')
+    (zn.writeBashScriptBin "gvim" ''
+      neovide "$@" & disown
+    '')
+    (zn.writeBashScriptBin "lgvim" ''
+      export DZ_NVIM_CONFIG_USE_LOCAL=no
+      gvim "$@"
+    '')
+    (zn.writeBashScriptBin "jj" ''
+      just "$@"
+    '')
+    (zn.writeBashScriptBin "ssh-adhdz" ''
+      gcloud compute ssh \
+        --zone "us-central1-c" \
+        --project "adhdz-414420" \
+        --command "bash -c fish" \
+        mitch@instance-20250718-181706 \
+        -- -t
+    '')
+    (zn.writeBashScriptBin "kittyRootWindow" ''
+      TEMP_DIR=$(mktemp -d --)
+      trap 'rm -rf "$TEMP_DIR"' EXIT
+      up="$TEMP_DIR/k"
+      export DZ_KITTY_UNIX_PATH="$up"
+      /usr/bin/kitty -o allow_remote_control=yes --listen-on "unix:$up" "$@"
+    '')
+    (zn.writeBashScriptBin "kittenSelf" ''
+      function doTheThing() {
+        sleep 1.01
+        kitten @ --to "unix:$DZ_KITTY_UNIX_PATH" "$@"
+      }
+      doTheThing "$@" & disown
+    '')
+  ];
+  home.file = { };
+  home.sessionVariables = { EDITOR = "nvim"; };
+  xdg.configFile = {
+    "fastfetch" = {
+      source = config.lib.file.mkOutOfStoreSymlink "/home/dz/.config/home-manager/domain/fastfetch";
+      recursive = true;
+    };
+    "nvim/fnl" = {
+      source = config.lib.file.mkOutOfStoreSymlink "/home/dz/.config/home-manager/domain/nvim/fnl";
+      recursive = true;
+    };
+    "nvim/lua" = {
+      source = config.lib.file.mkOutOfStoreSymlink "/home/dz/.config/home-manager/domain/nvim/lua";
+      recursive = true;
+    };
+    "nvim/filetype.vim" = {
+      source = config.lib.file.mkOutOfStoreSymlink "/home/dz/.config/home-manager/domain/nvim/filetype.vim";
+      recursive = true;
+    };
+    "neovide/config.toml" = {
+      source = config.lib.file.mkOutOfStoreSymlink "/home/dz/.config/home-manager/domain/nvim/neovide-config.toml";
+      recursive = true;
+    };
+  };
+  systemd.user.services.polybar = {
+    Unit = {
+      Description = "polybar runner";
+      WantedBy = [];
+    };
+    Service = {
+      ExecStart = "${zn.writeBashScriptBin' "polybar.launch" [pkgs.picom] ''
+        export PATH=${pkgs.picom}/bin:$PATH
+        picom
+      ''}/bin/polybar.launch";
+      Restart = "always";
+    };
+  };
+
+  fonts.fontconfig.enable = true;
+  fonts.fontconfig.defaultFonts.serif = [ "Liberation Serif" ];
+  fonts.fontconfig.defaultFonts.sansSerif = [ "Ubuntu" ];
+  fonts.fontconfig.defaultFonts.monospace = [
+    # "RecMonoCasual Nerd Font Mono"
+    # "Lilex Nerd Font Mono"
+    ### "Hurmit Nerd Font Mono"
+    # "FantasqueSansM Nerd Font Mono"
+    # "ComicShannsMono Nerd Font Mono"
+    # "Monaspace Krypton Frozen SemiBold"
+    # "Monaspace Argon Frozen SemiBold"
+    # "Monaspace Argon Frozen ExtraBold"
+    # "Monaspace Krypton Frozen ExtraBold"
+    # "Monaspace Xenon Frozen ExtraBold"
+    # "Monaspace Radon Frozen ExtraBold"
+    # "MonaspiceKr Nerd Font Mono"
+    # "MonaspiceXe Nerd Font Mono"
+    # "MonaspiceRn Nerd Font Mono"
+    "MonaspiceAr Nerd Font Mono"
+  ];
+
+  programs.tmux = {
+    enable = true;
+    clock24 = true;
+    mouse = true;
+    escapeTime = 0;
+    keyMode = "vi";
+    plugins = with pkgs.tmuxPlugins; [
+      {
+        plugin = rose-pine;
+        extraConfig = ''
+          set -g @rose_pine_variant 'main'
+        '';
+      }
+    ];
+
+    extraConfig = ''
+      set -g allow-passthrough on
+      set -g default-shell ${pkgs.fish}/bin/fish
+    '';
+  };
+  programs.fish = import ./domain/fish/hm.nix { lib = lib; pkgs = pkgs; };
+  programs.neovim = import ./domain/nvim/config.nix { inherit lib nvim-config mitch-utils pkgs; };
+  programs.home-manager.enable = true;
+}
