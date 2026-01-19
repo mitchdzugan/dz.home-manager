@@ -1,10 +1,6 @@
 { lib, pkgs, nvim-config, mitch-utils, ... }:
 
 let
-  wrapColorscheme = pkg: pkg;
-  colorschemes = {
-    aurora = wrapColorscheme pkgs.vimPlugins.aurora;
-  };
   fromGitHub = repo: ref: rev: pkgs.vimUtils.buildVimPlugin {
     pname = "${lib.strings.sanitizeDerivationName repo}";
     version = ref;

@@ -143,23 +143,21 @@ in {
     '')
   ];
   home.file = { };
-  home.sessionVariables = { 
+  home.sessionVariables = {
     EDITOR = "evim";
-    DZ_NVIM_CONFIG_CHECKOUT_PATH = this.checkouts.dz-nvim-config; 
+    DZ_NVIM_CONFIG_CHECKOUT_PATH = this.checkouts.dz-nvim-config;
   };
   xdg.configFile = {
     "fastfetch" = {
       source = mkDomainSymlink "./fastfetch";
       recursive = true;
     };
-    "nvim/filetype.vim" = {
-      source = mkDomainSymlink "./nvim/filetype.vim";
-      recursive = true;
-    };
-    "neovide/config.toml" = {
-      source = mkDomainSymlink "./nvim/neovide-config.toml";
-      recursive = true;
-    };
+    "neovide/config.toml" = builtins.toFile "config.toml" ''
+      neovim-bin = "evim"
+      [font]
+      normal = ["MonaspiceAr Nerd Font Mono"]
+      size = 11.0
+    '';
   };
   systemd.user.services.polybar = {
     Unit = {
