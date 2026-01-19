@@ -119,6 +119,9 @@ in {
     (zn.writeBashScriptBin "jj" ''
       just "$@"
     '')
+    (zn.writeBashScriptBin "dz-hm" ''
+      nix run path:/home/dz/Projects/dz.home-manager -- "$@"
+    '')
     (zn.writeBashScriptBin "ssh-adhdz" ''
       gcloud compute ssh \
         --zone "us-central1-c" \
