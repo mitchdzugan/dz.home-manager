@@ -146,16 +146,17 @@ in {
   home.sessionVariables = {
     EDITOR = "evim";
     DZ_NVIM_CONFIG_CHECKOUT_PATH = this.checkouts.dz-nvim-config;
+    DZ_HOME_MANAGER_CHECKOUT_PATH = this.checkouts.dz-home-manager;
   };
   xdg.configFile = {
     "fastfetch" = {
       source = mkDomainSymlink "./fastfetch";
       recursive = true;
     };
-    "neovide/config.toml" = builtins.toFile "config.toml" ''
+    "neovide/config.toml".text = ''
       neovim-bin = "evim"
       [font]
-      normal = ["MonaspiceAr Nerd Font Mono"]
+      normal = ["monospace"]
       size = 11.0
     '';
   };
