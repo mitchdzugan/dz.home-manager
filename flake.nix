@@ -51,7 +51,7 @@
             if [[ "$1" != "" ]]; then
               echo 'dz-home-manager.url = "github:mitchdzugan/dz.home-manager";'
             else
-              echo "dz-home-manager.url = \"path:$DZ_NVIM_CONFIG_CHECKOUT_PATH\";"
+              echo "dz-home-manager.url = \"path:$DZ_HOME_MANAGER_CHECKOUT_PATH\";"
             fi
             cat << EOF
                 dz-home-manager.inputs.nixpkgs.follows = "nixpkgs";

@@ -3,7 +3,7 @@ this:
 { config, lib, pkgs, ... }:
 let
   mkDomainSymlink = rel: (
-    config.lib.file.mkOutOfStoreSymlink (this.checkouts.dz-home-manager + "./domain/" + rel)
+    config.lib.file.mkOutOfStoreSymlink (this.checkouts.dz-home-manager + "/domain/" + rel)
   );
   system = pkgs.stdenv.hostPlatform.system;
   zn = zn-nix.mk-zn system;
