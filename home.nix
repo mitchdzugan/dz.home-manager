@@ -1,8 +1,11 @@
-{ zn-nix, mitch-utils, nvim-config, ... }:
+{ nixgl, zn-nix, mitch-utils, nvim-config, ... }:
+this:
 { config, lib, pkgs, ... }:
-
 let
-  system = pkgs.system;
+  mkDomainSymlink = rel: (
+    config.lib.file.mkOutOfStoreSymlink (this.checkouts.dz-home-manager + "./domain/" + rel)
+  );
+  system = pkgs.stdenv.hostPlatform.system;
   zn = zn-nix.mk-zn system;
   fontPkgs = [
     pkgs.font-awesome
@@ -28,11 +31,19 @@ let
     pkgs.ubuntu-classic
   ];
 in {
-  home.username = "dz";
-  home.homeDirectory = "/home/dz";
-  home.stateVersion = "25.11"; # Please read the comment before changing.
+  targets.genericLinux.nixGL = {
+    packages = nixgl.packages;
+    defaultWrapper = this.defaultNixGLWrapper;
+  };
+  home.username = this.username;
+  home.homeDirectory = this.homeDirectory;
+  home.stateVersion = this.stateVersion;
   home.packages = with pkgs; fontPkgs ++ [
+    audacity
+    babashka
     bat
+    blueman
+    brightnessctl
     direnv
     emacs
     fd
@@ -42,18 +53,33 @@ in {
     github-desktop
     google-cloud-sdk
     grc
+    htop
+    imagemagick
     jq
     just
+    libnotify
+    lua-language-server
+    lxqt.pavucontrol-qt
+    mpc
+    ncmpcpp
+    networkmanagerapplet
+    nix-prefetch-github
     nixd
     nixfmt
+    ripgrep
     rlwrap
     rofi
+    rust-analyzer
     typescript-language-server
-    lua-language-server
+    ueberzugpp
+    unzip
+    vlc
     (luajit.withPackages (luaPackages: with luaPackages; [
       busted
       fennel
     ]))
+    (config.lib.nixGL.wrap pkgs.pear-desktop)
+    (config.lib.nixGL.wrap pkgs.neovide)
     (mitch-utils.mkFnlFmt pkgs.luajit)
     (mitch-utils.mkNixWork pkgs)
     (zn.writeBashScriptBin "bvim" ''
@@ -81,6 +107,8 @@ in {
       export DZ_NVIM_CONFIG_USE_LOCAL=no
       evim "$@"
     '')
+    (zn.writeBashScriptBin "vim" "evim \"$@\"")
+    (zn.writeBashScriptBin "vi" "evim \"$@\"")
     (zn.writeBashScriptBin "gvim" ''
       neovide "$@" & disown
     '')
@@ -115,26 +143,21 @@ in {
     '')
   ];
   home.file = { };
-  home.sessionVariables = { EDITOR = "nvim"; };
+  home.sessionVariables = { 
+    EDITOR = "evim";
+    DZ_NVIM_CONFIG_CHECKOUT_PATH = this.checkouts.dz-nvim-config; 
+  };
   xdg.configFile = {
     "fastfetch" = {
-      source = config.lib.file.mkOutOfStoreSymlink "/home/dz/.config/home-manager/domain/fastfetch";
-      recursive = true;
-    };
-    "nvim/fnl" = {
-      source = config.lib.file.mkOutOfStoreSymlink "/home/dz/.config/home-manager/domain/nvim/fnl";
-      recursive = true;
-    };
-    "nvim/lua" = {
-      source = config.lib.file.mkOutOfStoreSymlink "/home/dz/.config/home-manager/domain/nvim/lua";
+      source = mkDomainSymlink "./fastfetch";
       recursive = true;
     };
     "nvim/filetype.vim" = {
-      source = config.lib.file.mkOutOfStoreSymlink "/home/dz/.config/home-manager/domain/nvim/filetype.vim";
+      source = mkDomainSymlink "./nvim/filetype.vim";
       recursive = true;
     };
     "neovide/config.toml" = {
-      source = config.lib.file.mkOutOfStoreSymlink "/home/dz/.config/home-manager/domain/nvim/neovide-config.toml";
+      source = mkDomainSymlink "./nvim/neovide-config.toml";
       recursive = true;
     };
   };
@@ -172,6 +195,39 @@ in {
     # "MonaspiceRn Nerd Font Mono"
     "MonaspiceAr Nerd Font Mono"
   ];
+
+  programs.firefox = {
+    enable = true;
+    package = config.lib.nixGL.wrap pkgs.firefox;
+    policies = {
+      Preferences = {
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = { Value = true; Status = "locked"; };
+        "layout.css.devPixelsPerPx" = { Value = "1.0"; Status = "locked"; };
+      };
+    };
+    profiles = {
+      default = {
+        id = 0;
+        name = "default";
+        isDefault = true;
+        settings = {
+          "browser.tabs.inTitlebar" = 0;
+          "full-screen-api.ignore-widgets" = true;
+          "full-screen-api.exit-on.windowRaise" = false;
+          /*
+          "extensions.activeThemeId" = with config.nur.repos.rycee;
+            firefox-addons.dracula-dark-colorscheme.addonId;
+          */
+        };
+        userChrome = builtins.readFile ./domain/firefox/userChrome.css;
+        # extensions = with nur.repos.rycee.firefox-addons; [
+          # dracula-dark-colorscheme
+          # ublock-origin
+          # video-downloadhelper
+        # ];
+      };
+    };
+  };
 
   programs.tmux = {
     enable = true;

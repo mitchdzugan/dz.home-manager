@@ -17,9 +17,9 @@ let
   };
 in {
   enable = true;
-  defaultEditor = true;
-  viAlias = true;
-  vimAlias = true;
+  defaultEditor = false;
+  viAlias = false;
+  vimAlias = false;
   vimdiffAlias = true;
   withNodeJs = true;
   withPython3 = true;
