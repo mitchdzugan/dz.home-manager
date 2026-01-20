@@ -188,11 +188,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1768770171,
-        "narHash": "sha256-JPmLGZgdWa8QcQbbtBqyZhpmxIHZ3lUO48laERjw+4k=",
+        "lastModified": 1768942641,
+        "narHash": "sha256-i25tkhqjsfo0YKz8To/+gzazW1v4f8qUGqJQ8OLrkqE=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "521d5ea1a229ba315dd1cceaf869946ddcc83d36",
+        "rev": "9997de2f62d1875644f02ddf96cf485a4baecb6f",
         "type": "github"
       },
       "original": {
@@ -228,17 +228,14 @@
         "mitch-utils": "mitch-utils_2"
       },
       "locked": {
-        "lastModified": 1768786993,
-        "narHash": "sha256-rNSY27dYtNFOud5ufrnJhZIglIXopT3ZBn/bGPpLJdw=",
-        "owner": "mitchdzugan",
-        "repo": "__.lua",
-        "rev": "cf495e12b79a9a9ec0c2e205b8a5940fb6922694",
-        "type": "github"
+        "lastModified": 1768936539,
+        "narHash": "sha256-x0PwMjaPkGsC5yFZtyf+0JeX4aSDgLIBNft/WhmeU+U=",
+        "path": "/VOID/proj/__.lua",
+        "type": "path"
       },
       "original": {
-        "owner": "mitchdzugan",
-        "repo": "__.lua",
-        "type": "github"
+        "path": "/VOID/proj/__.lua",
+        "type": "path"
       }
     },
     "mitch-utils": {
@@ -247,11 +244,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1768773183,
-        "narHash": "sha256-/OE1KroJUsgtXVAYOehL9Q0ISLSutjDlyM80HT56Aqo=",
+        "lastModified": 1768936531,
+        "narHash": "sha256-PkF1YAH7pwpvU6AxYEKmovE31JSi/+fNqgfrpF2hjqg=",
         "owner": "mitchdzugan",
         "repo": "mitch-utils.nix",
-        "rev": "4e5692d69f1c9f8e36a07441b91177a2317facea",
+        "rev": "943d9cc23b48ec0a4aa97f0b5ccbe42bc95f0bb5",
         "type": "github"
       },
       "original": {
@@ -266,11 +263,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1768773183,
-        "narHash": "sha256-/OE1KroJUsgtXVAYOehL9Q0ISLSutjDlyM80HT56Aqo=",
+        "lastModified": 1768936531,
+        "narHash": "sha256-PkF1YAH7pwpvU6AxYEKmovE31JSi/+fNqgfrpF2hjqg=",
         "owner": "mitchdzugan",
         "repo": "mitch-utils.nix",
-        "rev": "4e5692d69f1c9f8e36a07441b91177a2317facea",
+        "rev": "943d9cc23b48ec0a4aa97f0b5ccbe42bc95f0bb5",
         "type": "github"
       },
       "original": {
@@ -285,17 +282,14 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1768773183,
-        "narHash": "sha256-/OE1KroJUsgtXVAYOehL9Q0ISLSutjDlyM80HT56Aqo=",
-        "owner": "mitchdzugan",
-        "repo": "mitch-utils.nix",
-        "rev": "4e5692d69f1c9f8e36a07441b91177a2317facea",
-        "type": "github"
+        "lastModified": 1768940014,
+        "narHash": "sha256-IzBOK7WW/n0wlu2ySxTrTmXTFXZ+DVtsS1Dj0Z2pT30=",
+        "path": "/VOID/proj/mitch-utils.nix",
+        "type": "path"
       },
       "original": {
-        "owner": "mitchdzugan",
-        "repo": "mitch-utils.nix",
-        "type": "github"
+        "path": "/VOID/proj/mitch-utils.nix",
+        "type": "path"
       }
     },
     "nix-fetcher-data": {
@@ -440,17 +434,14 @@
         "mitch-utils": "mitch-utils_3"
       },
       "locked": {
-        "lastModified": 1768787042,
-        "narHash": "sha256-xl7+K+F+636KIku1PN68Uf7QKQnumBHNMKfkPRqOsfA=",
-        "owner": "mitchdzugan",
-        "repo": "nvim-config",
-        "rev": "d6efd24b7f726caf4fb22a2e119bf4e212cac2de",
-        "type": "github"
+        "lastModified": 1768944797,
+        "narHash": "sha256-3VISgQGKtgziDQvYl0KCrOFMs6M3F0BLcudc7vKbLk4=",
+        "path": "/VOID/proj/nvim-config",
+        "type": "path"
       },
       "original": {
-        "owner": "mitchdzugan",
-        "repo": "nvim-config",
-        "type": "github"
+        "path": "/VOID/proj/nvim-config",
+        "type": "path"
       }
     },
     "rep": {

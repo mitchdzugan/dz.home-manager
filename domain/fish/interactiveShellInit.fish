@@ -387,6 +387,8 @@ function configure_my_tide
   set_color $tide_git_color_branch | read -gx _tide_location_color
 end
 
+set -l kitty_bg_parts (kitty @ get-colors | grep "^background " | string split -n ' ')
+set -gx KITTY_BG_COLOR $kitty_bg_parts[2]
 set -gx DZ_KITTY_PRIMARY_WINDOW_ID "$DZ_KITTY_PRIMARY_WINDOW_ID"
 if [ "$DZ_KITTY_WINDOW_IS_SECONDARY" != "1" ]
   set -gx DZ_KITTY_PRIMARY_WINDOW_ID "$KITTY_WINDOW_ID"

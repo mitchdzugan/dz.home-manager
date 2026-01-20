@@ -82,33 +82,10 @@ in {
     (config.lib.nixGL.wrap pkgs.neovide)
     (mitch-utils.mkFnlFmt pkgs.luajit)
     (mitch-utils.mkNixWork pkgs)
-    (zn.writeBashScriptBin "bvim" ''
-      vimRunDir="$(pwd)"
-      ${nvim-config.mkShellHook pkgs}
-      export DZ_NVIM_CONFIG_USE_LOCAL=yes
-      export DZ_NVIM_CONFIG_MACRO_PATH="$FENNEL_MACRO_PATH"
-      export DZ_NVIM_CONFIG_FENNEL_PATH="$DZ_NVIM_CONFIG_CHECKOUT_PATH/src/?.fnl"
-      export DZ_NVIM_CONFIG_LUA_PATH_EXTRA="$LUA_PATH_EXTRA;$DZ_NVIM_CONFIG_CHECKOUT_PATH/src/?.fnl"
-      bash
-    '')
-    (zn.writeBashScriptBin "evim" ''
-      vimRunDir="$(pwd)"
-      ${nvim-config.mkShellHook pkgs}
-      if [[ "$DZ_NVIM_CONFIG_USE_LOCAL" != "no" ]]; then
-        export DZ_NVIM_CONFIG_USE_LOCAL=yes
-      fi
-      export DZ_NVIM_CONFIG_MACRO_PATH="$FENNEL_MACRO_PATH"
-      export DZ_NVIM_CONFIG_FENNEL_PATH="$DZ_NVIM_CONFIG_CHECKOUT_PATH/src/?.fnl"
-      export DZ_NVIM_CONFIG_LUA_PATH_EXTRA="$LUA_PATH_EXTRA;$DZ_NVIM_CONFIG_CHECKOUT_PATH/src/?.fnl"
-      cd "$vimRunDir"
-      nvim "$@"
-    '')
     (zn.writeBashScriptBin "lvim" ''
       export DZ_NVIM_CONFIG_USE_LOCAL=no
-      evim "$@"
+      nvim "$@"
     '')
-    (zn.writeBashScriptBin "vim" "evim \"$@\"")
-    (zn.writeBashScriptBin "vi" "evim \"$@\"")
     (zn.writeBashScriptBin "gvim" ''
       neovide "$@" & disown
     '')
@@ -120,7 +97,7 @@ in {
       just "$@"
     '')
     (zn.writeBashScriptBin "dz-hm" ''
-      nix run path:/home/dz/Projects/dz.home-manager -- "$@"
+      nix run "path:$DZ_HOME_MANAGER_CHECKOUT_PATH" -- "$@"
     '')
     (zn.writeBashScriptBin "ssh-adhdz" ''
       gcloud compute ssh \
@@ -147,7 +124,6 @@ in {
   ];
   home.file = { };
   home.sessionVariables = {
-    EDITOR = "evim";
     DZ_NVIM_CONFIG_CHECKOUT_PATH = this.checkouts.dz-nvim-config;
     DZ_HOME_MANAGER_CHECKOUT_PATH = this.checkouts.dz-home-manager;
   };
@@ -157,7 +133,6 @@ in {
       recursive = true;
     };
     "neovide/config.toml".text = ''
-      neovim-bin = "evim"
       [font]
       normal = ["monospace"]
       size = 11.0
@@ -252,6 +227,35 @@ in {
     '';
   };
   programs.fish = import ./domain/fish/hm.nix { lib = lib; pkgs = pkgs; };
-  programs.neovim = import ./domain/nvim/config.nix { inherit lib nvim-config mitch-utils pkgs; };
+  programs.neovim = (
+    let
+      nvimConfigPkg = (nvim-config.mkPkg pkgs);
+      shCore = pkgs.writeText "shCore" (nvim-config.mkShellHook pkgs);
+      shPost = pkgs.writeText "shPost" ''
+        # if [[ "$DZ_NVIM_CONFIG_USE_LOCAL" != "no" ]]; then
+        export DZ_NVIM_CONFIG_USE_LOCAL=yes
+        # fi
+        export DZ_NVIM_CONFIG_MACRO_PATH="$FENNEL_MACRO_PATH"
+        export DZ_NVIM_CONFIG_FENNEL_PATH="$DZ_NVIM_CONFIG_CHECKOUT_PATH/src/?.fnl"
+        export DZ_NVIM_CONFIG_LUA_PATH_EXTRA="$LUA_PATH_EXTRA;$DZ_NVIM_CONFIG_CHECKOUT_PATH/src/?.fnl"
+        cd "$vimRunDir"
+      '';
+    in {
+      package = pkgs.neovim-unwrapped.overrideAttrs (oldAttrs: {
+        postInstall = ''
+          mv $out/bin/nvim $out/bin/nvim-true-bin
+          echo 'vimRunDir="$(pwd)"'           > $out/bin/nvim
+          cat ${pkgs.writeText "hk" (nvim-config.mkShellHook pkgs)} >> $out/bin/nvim
+          cat ${shPost}                                             >> $out/bin/nvim
+          echo $out/bin/nvim-true-bin '"$@"' >> $out/bin/nvim
+          chmod +x $out/bin/nvim
+        '';
+      });
+      extraLuaConfig = "require(\"nvim-config\").doTheThings()";
+      plugins = nvimConfigPkg.propagatedBuildInputs ++ [(pkgs.neovimUtils.buildNeovimPlugin { luaAttr = nvimConfigPkg; })];
+    } // (builtins.listToAttrs (map (n: {name = n; value = true;}) [
+      "enable" "defaultEditor" "viAlias" "vimAlias" "vimdiffAlias" "withNodeJs" "withPython3" "withRuby"
+    ]))
+  );
   programs.home-manager.enable = true;
 }

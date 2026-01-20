@@ -13,8 +13,8 @@
     zn-nix.inputs.nixpkgs.follows = "nixpkgs";
     mitch-utils.url = "github:mitchdzugan/mitch-utils.nix";
     # mitch-utils.url = "path:/home/dz/Projects/mitch-utils.nix";
-    nvim-config.url = "github:mitchdzugan/nvim-config";
-    # nvim-config.url = "path:/home/dz/Projects/nvim-config";
+    # nvim-config.url = "github:mitchdzugan/nvim-config";
+    nvim-config.url = "path:/VOID/proj/nvim-config";
   };
 
   outputs = attrs: ({ hmModule = ((import ./home.nix) attrs); } // (
