@@ -5,6 +5,8 @@ let
   mkDomainSymlink = rel: (
     config.lib.file.mkOutOfStoreSymlink (this.checkouts.dz-home-manager + "/domain/" + rel)
   );
+  getEnvExtra = ({ env ? {}, ... }: env);
+  envExtra = getEnvExtra this;
   system = pkgs.stdenv.hostPlatform.system;
   nurRepos = (import nixpkgs {
     inherit system;
@@ -51,6 +53,7 @@ in {
     brightnessctl
     direnv
     emacs
+    fastfetch
     fd
     fennel-ls
     fzf
@@ -128,7 +131,7 @@ in {
     '')
   ];
   home.file = { };
-  home.sessionVariables = {
+  home.sessionVariables = envExtra // {
     DZ_NVIM_CONFIG_CHECKOUT_PATH = this.checkouts.dz-nvim-config;
     DZ_HOME_MANAGER_CHECKOUT_PATH = this.checkouts.dz-home-manager;
   };
@@ -200,7 +203,7 @@ in {
             firefox-addons.dracula-dark-colorscheme.addonId;
         };
         userChrome = builtins.readFile ./domain/firefox/userChrome.css;
-        extensions = with nurRepos.rycee.firefox-addons; [
+        extensions.packages = with nurRepos.rycee.firefox-addons; [
           dracula-dark-colorscheme
           ublock-origin
           video-downloadhelper
@@ -254,7 +257,7 @@ in {
           chmod +x $out/bin/nvim
         '';
       });
-      extraLuaConfig = "require(\"nvim-config\").doTheThings()";
+      initLua = "require(\"nvim-config\").doTheThings()";
       plugins = nvimConfigPkg.propagatedBuildInputs ++ [(pkgs.neovimUtils.buildNeovimPlugin { luaAttr = nvimConfigPkg; })];
     } // (builtins.listToAttrs (map (n: {name = n; value = true;}) [
       "enable" "defaultEditor" "viAlias" "vimAlias" "vimdiffAlias" "withNodeJs" "withPython3" "withRuby"
