@@ -7,14 +7,16 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nur.url = "github:nix-community/NUR";
+    nur.inputs.nixpkgs.follows = "nixpkgs";
     nixgl.url = "github:nix-community/nixGL";
     nixgl.inputs.nixpkgs.follows = "nixpkgs";
     zn-nix.url = "github:mitchdzugan/zn.nix";
     zn-nix.inputs.nixpkgs.follows = "nixpkgs";
     mitch-utils.url = "github:mitchdzugan/mitch-utils.nix";
+    nvim-config.url = "github:mitchdzugan/nvim-config";
     # mitch-utils.url = "path:/home/dz/Projects/mitch-utils.nix";
-    # nvim-config.url = "github:mitchdzugan/nvim-config";
-    nvim-config.url = "path:/VOID/proj/nvim-config";
+    # nvim-config.url = "path:/VOID/proj/nvim-config";
   };
 
   outputs = attrs: ({ hmModule = ((import ./home.nix) attrs); } // (

@@ -1,4 +1,4 @@
-{ nixgl, zn-nix, mitch-utils, nvim-config, ... }:
+{ nixpkgs, nixgl, nur, zn-nix, mitch-utils, nvim-config, ... }:
 this:
 { config, lib, pkgs, ... }:
 let
@@ -6,6 +6,11 @@ let
     config.lib.file.mkOutOfStoreSymlink (this.checkouts.dz-home-manager + "/domain/" + rel)
   );
   system = pkgs.stdenv.hostPlatform.system;
+  nurRepos = (import nixpkgs {
+    inherit system;
+    config = { allowUnfree = true; };
+    overlays = [nur.overlays.default];
+  }).nur.repos;
   zn = zn-nix.mk-zn system;
   fontPkgs = [
     pkgs.font-awesome
@@ -191,17 +196,15 @@ in {
           "browser.tabs.inTitlebar" = 0;
           "full-screen-api.ignore-widgets" = true;
           "full-screen-api.exit-on.windowRaise" = false;
-          /*
-          "extensions.activeThemeId" = with config.nur.repos.rycee;
+          "extensions.activeThemeId" = with nurRepos.rycee;
             firefox-addons.dracula-dark-colorscheme.addonId;
-          */
         };
         userChrome = builtins.readFile ./domain/firefox/userChrome.css;
-        # extensions = with nur.repos.rycee.firefox-addons; [
-          # dracula-dark-colorscheme
-          # ublock-origin
-          # video-downloadhelper
-        # ];
+        extensions = with nurRepos.rycee.firefox-addons; [
+          dracula-dark-colorscheme
+          ublock-origin
+          video-downloadhelper
+        ];
       };
     };
   };
@@ -244,10 +247,10 @@ in {
       package = pkgs.neovim-unwrapped.overrideAttrs (oldAttrs: {
         postInstall = ''
           mv $out/bin/nvim $out/bin/nvim-true-bin
-          echo 'vimRunDir="$(pwd)"'           > $out/bin/nvim
+          echo 'vimRunDir="$(pwd)"'                                  > $out/bin/nvim
           cat ${pkgs.writeText "hk" (nvim-config.mkShellHook pkgs)} >> $out/bin/nvim
           cat ${shPost}                                             >> $out/bin/nvim
-          echo $out/bin/nvim-true-bin '"$@"' >> $out/bin/nvim
+          echo $out/bin/nvim-true-bin '"$@"'                        >> $out/bin/nvim
           chmod +x $out/bin/nvim
         '';
       });
