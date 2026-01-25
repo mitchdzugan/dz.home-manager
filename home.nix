@@ -135,6 +135,21 @@ in {
     DZ_NVIM_CONFIG_CHECKOUT_PATH = this.checkouts.dz-nvim-config;
     DZ_HOME_MANAGER_CHECKOUT_PATH = this.checkouts.dz-home-manager;
   };
+  home.pointerCursor = {
+    gtk.enable = true;
+    x11.enable = true;
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Ice";
+    size = 24;
+    hyprcursor = { enable = true; size = 24; };
+  };
+
+  gtk.enable = true;
+  gtk.theme.package = pkgs.rose-pine-gtk-theme;
+  gtk.theme.name = "rose-pine";
+  gtk.iconTheme.package = pkgs.dracula-icon-theme;
+  gtk.iconTheme.name = "Dracula";
+
   xdg.configFile = {
     "fastfetch" = {
       source = mkDomainSymlink "./fastfetch";
