@@ -11,8 +11,17 @@
     nur.inputs.nixpkgs.follows = "nixpkgs";
     nixgl.url = "github:nix-community/nixGL";
     nixgl.inputs.nixpkgs.follows = "nixpkgs";
+    plasma-manager.url = "github:nix-community/plasma-manager";
+    plasma-manager.inputs.nixpkgs.follows = "nixpkgs";
+    plasma-manager.inputs.home-manager.follows = "home-manager";
     zn-nix.url = "github:mitchdzugan/zn.nix";
     zn-nix.inputs.nixpkgs.follows = "nixpkgs";
+    ztr.url = "github:mitchdzugan/ztr";
+    ztr.inputs.nixpkgs.follows = "nixpkgs";
+    zkg.url = "github:mitchdzugan/zkg";
+    zkg.inputs.nixpkgs.follows = "nixpkgs";
+    zkm.url = "github:mitchdzugan/zkm";
+    zkm.inputs.nixpkgs.follows = "nixpkgs";
     # mitch-utils.url = "path:/home/dz/Projects/mitch-utils.nix";
     # mitch-utils.url = "path:/VOID/proj/mitch-utils.nix";
     mitch-utils.url = "github:mitchdzugan/mitch-utils.nix";

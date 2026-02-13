@@ -1,4 +1,4 @@
-{ nixpkgs, nixgl, nur, zn-nix, mitch-utils, nvim-config, ... }:
+inputs@{ nixpkgs, plasma-manager, nixgl, nur, mitch-utils, nvim-config, ... }:
 this:
 { config, lib, pkgs, ... }:
 let
@@ -13,7 +13,7 @@ let
     config = { allowUnfree = true; };
     overlays = [nur.overlays.default];
   }).nur.repos;
-  zn = zn-nix.mk-zn system;
+  zn = inputs.zn-nix.mk-zn system;
   fontPkgs = [
     pkgs.font-awesome
     pkgs.monaspace
@@ -37,7 +37,16 @@ let
     pkgs.nerd-fonts._3270
     pkgs.ubuntu-classic
   ];
+  zkmPkg = (
+    config.lib.nixGL.wrap inputs.zkm.packages.${pkgs.hostPlatform.system}.zkm
+  );
+  mkZkm = n: f: zn.writeBashScriptBin' n [zkmPkg f] ''
+    ${zkmPkg}/bin/zkm ${f}
+  '';
 in {
+  imports = [
+    plasma-manager.homeModules.plasma-manager
+  ];
   targets.genericLinux.nixGL = {
     packages = nixgl.packages;
     defaultWrapper = this.defaultNixGLWrapper;
@@ -51,6 +60,7 @@ in {
     bat
     blueman
     brightnessctl
+    bundler
     direnv
     emacs
     fastfetch
@@ -63,6 +73,7 @@ in {
     grc
     htop
     imagemagick
+    jekyll
     jq
     just
     libnotify
@@ -74,6 +85,7 @@ in {
     nix-prefetch-github
     nixd
     nixfmt
+    pandoc
     ripgrep
     rlwrap
     rofi
@@ -82,10 +94,16 @@ in {
     ueberzugpp
     unzip
     vlc
+    watchexec
+    (config.lib.nixGL.wrap inputs.zkg.packages.${pkgs.hostPlatform.system}.zkg)
+    (config.lib.nixGL.wrap inputs.ztr.packages.${pkgs.hostPlatform.system}.ztr)
+    zkmPkg
+    (mkZkm "home.zkm" ./zkm/home.clj)
     (luajit.withPackages (luaPackages: with luaPackages; [
       busted
       fennel
     ]))
+    (config.lib.nixGL.wrap pkgs.vesktop)
     (config.lib.nixGL.wrap pkgs.pear-desktop)
     (config.lib.nixGL.wrap pkgs.neovide)
     (mitch-utils.mkFnlFmt pkgs.luajit)
@@ -103,6 +121,9 @@ in {
     '')
     (zn.writeBashScriptBin "jj" ''
       just "$@"
+    '')
+    (zn.writeBashScriptBin "rofi-dmenu" ''
+      rofi -matching fuzzy -sorting-method fzf -sort -dmenu "$@"
     '')
     (zn.writeBashScriptBin "dz-hm" ''
       nix run "path:$DZ_HOME_MANAGER_CHECKOUT_PATH" -- "$@"
@@ -136,7 +157,7 @@ in {
     DZ_HOME_MANAGER_CHECKOUT_PATH = this.checkouts.dz-home-manager;
   };
   home.pointerCursor = {
-    gtk.enable = true;
+    # gtk.enable = true;
     x11.enable = true;
     package = pkgs.bibata-cursors;
     name = "Bibata-Modern-Ice";
@@ -144,11 +165,11 @@ in {
     hyprcursor = { enable = true; size = 24; };
   };
 
-  gtk.enable = true;
-  gtk.theme.package = pkgs.rose-pine-gtk-theme;
-  gtk.theme.name = "rose-pine";
-  gtk.iconTheme.package = pkgs.dracula-icon-theme;
-  gtk.iconTheme.name = "Dracula";
+  # gtk.enable = true;
+  # gtk.theme.package = pkgs.rose-pine-gtk-theme;
+  # gtk.theme.name = "rose-pine";
+  # gtk.iconTheme.package = pkgs.dracula-icon-theme;
+  # gtk.iconTheme.name = "Dracula";
 
   xdg.configFile = {
     "fastfetch" = {
@@ -278,5 +299,10 @@ in {
       "enable" "defaultEditor" "viAlias" "vimAlias" "vimdiffAlias" "withNodeJs" "withPython3" "withRuby"
     ]))
   );
+  programs.plasma = import ./domain/kdeplasma/config.nix;
+  programs.rofi = {
+    enable = true;
+    theme = ./domain/rofi/theme.rasi;
+  };
   programs.home-manager.enable = true;
 }
