@@ -172,6 +172,10 @@ in {
   # gtk.iconTheme.name = "Dracula";
 
   xdg.configFile = {
+    "klassy" = {
+      source = mkDomainSymlink "./klassy";
+      recursive = true;
+    };
     "fastfetch" = {
       source = mkDomainSymlink "./fastfetch";
       recursive = true;
