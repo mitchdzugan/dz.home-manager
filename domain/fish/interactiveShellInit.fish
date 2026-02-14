@@ -181,29 +181,49 @@ function mk_vi_mode_icon
 end
 
 function configure_my_tide
-  set -gx __color_fg_orange FF9900
-  set -gx __color_fg_white FFFFFF
-  set -gx __color_fg_main 4e2a8e
-  set -gx __color_fg_light 8787AF
-  set -gx __color_fg_alt FF00FF
-  set -gx __color_fg_info 2496ED
-  set -gx __color_bg_dark 1C1C1C
   set -gx __color_blood A85CB8
-  set -gx __color_bg_main 2F1A33
-  set -gx __color_bg_err DD4444
-  set -gx __color_bg_fail FF0000
-  set -gx __color_bg_succ 5FD700
-  set -gx __color_bg_info 87875F
-  set -gx __color_bg_hlight D7AF00
-  set -gx __color_fg_succ 0087af
-  set -gx __color_border_light 949494
-  set -gx __color_border_dark 6C6C6C
-
-  set -gx __color_vim_bg_main 1A332F
-  set -gx __color_vim_bg_replace 331A1E
-  set -gx __color_vim_bg_normal DADAED
-  set -gx __color_vim_bg_visual 444444
-  set -gx __color_vim_fg B0B0B0
+  set -gx __color_fg_orange bryellow
+  set -gx __color_fg_main normal
+  set -gx __color_fg_alt magenta
+  set -gx __color_fg_info blue
+  set -gx __color_fg_hlight yellow
+  set -gx __color_fg_fail red
+  set -gx __color_fg_succ green
+  if test -f "$HOME/.config/dz-theme/dark"
+    set -gx __color_fg_light black
+    set -gx __color_fg_white brwhite
+    set -gx __color_bg_dark 000000
+    set -gx __color_bg_main 2f1a33
+    set -gx __color_bg_err 331a1e
+    set -gx __color_bg_fail 331a1e
+    set -gx __color_bg_succ 1e331a
+    set -gx __color_bg_info 1a1e33
+    set -gx __color_bg_hlight 332f1a
+    set -gx __color_border_light 949494
+    set -gx __color_border_dark 6C6C6C
+    set -gx __color_vim_bg_main 1a2b33
+    set -gx __color_vim_bg_replace 331A1E
+    set -gx __color_vim_bg_normal 1a332f
+    set -gx __color_vim_bg_visual 444444
+    set -gx __color_vim_fg B0B0B0
+  else
+    set -gx __color_fg_light white
+    set -gx __color_fg_white brblack
+    set -gx __color_bg_dark FFFFFF
+    set -gx __color_bg_main efe4f1
+    set -gx __color_bg_err f1e4e6
+    set -gx __color_bg_fail f1e4e6
+    set -gx __color_bg_succ e6f1e4
+    set -gx __color_bg_info e4e6f1
+    set -gx __color_bg_hlight f1efe4
+    set -gx __color_border_light AAAAAA
+    set -gx __color_border_dark DDDDDD
+    set -gx __color_vim_bg_normal cae4e0
+    set -gx __color_vim_bg_replace e4cace
+    set -gx __color_vim_bg_main dadaed
+    set -gx __color_vim_bg_visual BBBBBB
+    set -gx __color_vim_fg 4F4F4F
+  end
 
   set -gx tide_left_prompt_items \
     zvi_mode zpb zpwd zpp
@@ -213,7 +233,7 @@ function configure_my_tide
   set -gx tide_aws_color $__color_fg_orange
   set -gx tide_aws_icon \uf270
   set -gx tide_rich_character_bg0 $__color_blood
-  set -gx tide_rich_character_bgX $__color_bg_err
+  set -gx tide_rich_character_bgX $__color_fg_fail
   set -gx tide_rich_character_color0 $__color_bg_main
   set -gx tide_rich_character_colorX $__color_bg_main
   set -gx tide_rich_character_char ""
@@ -231,7 +251,7 @@ function configure_my_tide
   set -gx tide_rich_context_always_display true
   set -gx tide_rich_context_bg_color $__color_bg_main
   set -gx tide_rich_context_color_user bryellow
-  set -gx tide_rich_context_color_host brwhite
+  set -gx tide_rich_context_color_host $__color_fg_white
   set -gx tide_rich_context_color_default brmagenta
   set -gx tide_rich_context_color_root brmagenta
   set -gx tide_rich_context_color_ssh brmagenta
@@ -257,17 +277,17 @@ function configure_my_tide
   set -gx tide_gcloud_bg_color $__color_bg_dark
   set -gx tide_gcloud_color $__color_fg_info
   set -gx tide_gcloud_icon \U000f02ad
-  set -gx tide_git_bg_color $__color_bg_dark
+  set -gx tide_git_bg_color $__color_bg_succ
   set -gx tide_git_bg_color_unstable $tide_git_bg_color
   set -gx tide_git_bg_color_urgent $tide_git_bg_color
-  set -gx tide_git_color_branch $__color_bg_succ
-  set -gx tide_git_color_conflicted $__color_bg_fail
-  set -gx tide_git_color_dirty $__color_bg_hlight
-  set -gx tide_git_color_operation $__color_bg_fail
-  set -gx tide_git_color_staged $__color_bg_hlight
-  set -gx tide_git_color_stash $__color_bg_succ
+  set -gx tide_git_color_branch $__color_fg_succ
+  set -gx tide_git_color_conflicted $__color_fg_fail
+  set -gx tide_git_color_dirty $__color_fg_hlight
+  set -gx tide_git_color_operation $__color_fg_fail
+  set -gx tide_git_color_staged $__color_fg_hlight
+  set -gx tide_git_color_stash $__color_fg_succ
   set -gx tide_git_color_untracked $__color_fg_info
-  set -gx tide_git_color_upstream $__color_bg_succ
+  set -gx tide_git_color_upstream $__color_fg_succ
   set -gx tide_git_icon 
   set -gx tide_git_truncation_length 24
   set -gx tide_git_truncation_strategy ""
@@ -289,9 +309,9 @@ function configure_my_tide
   set -gx tide_left_prompt_separator_diff_color ""
   set -gx tide_left_prompt_separator_same_color ""
   set -gx tide_left_prompt_suffix ""
-  set -gx tide_znix_bg_color 1A2A32
-  set -gx tide_znix_color 466880
-  set -gx tide_znix_color_bright 7EBAE4
+  set -gx tide_znix_bg_color $__color_bg_info
+  set -gx tide_znix_color $__color_fg_light
+  set -gx tide_znix_color_bright $__color_fg_white
   set -gx tide_znix_icon ""
   set -gx tide_node_bg_color $__color_bg_dark
   set -gx tide_node_color 44883E
@@ -355,7 +375,7 @@ function configure_my_tide
   set -gx tide_shlvl_icon \uf120
   set -gx tide_shlvl_threshold 1
   set -gx tide_status_bg_color $__color_bg_dark
-  set -gx tide_rich_status_bg_color_failure $__color_blood
+  set -gx tide_rich_status_bg_color_failure $__color_fg_fail
   set -gx tide_rich_status_color $__color_bg_succ
   set -gx tide_rich_status_color_failure $__color_bg_fail
   set -gx tide_rich_status_icon \u2714

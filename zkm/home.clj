@@ -2,7 +2,12 @@
 
 (defn melee
   ([] (melee "ssbm.1_02.iso"))
-  ([iso-name] ["gamemoderun"
+  ([iso-name] ["kde-inhibit"
+               "--power"
+               "--screenSaver"
+               "--notifications"
+               "--nightLight"
+               "gamemoderun"
                "/home/dz/.config/Slippi\\ Launcher/netplay/Slippi_Online-x86_64.AppImage"
                "-b"
                "-e"
