@@ -91,6 +91,7 @@ in {
     rlwrap
     rofi
     rust-analyzer
+    sxhkd
     typescript-language-server
     ueberzugpp
     unzip
@@ -173,6 +174,10 @@ in {
   # gtk.iconTheme.name = "Dracula";
 
   xdg.configFile = {
+    "sxhkd" = {
+      source = mkDomainSymlink "./sxhkd";
+      recursive = true;
+    };
     "klassy" = {
       source = mkDomainSymlink "./klassy";
       recursive = true;
@@ -197,6 +202,20 @@ in {
         export PATH=${pkgs.picom}/bin:$PATH
         picom
       ''}/bin/polybar.launch";
+      Restart = "always";
+    };
+  };
+
+  systemd.user.services.sxhkd = {
+    Unit = {
+      Description = "sxhkd runner";
+      WantedBy = [];
+    };
+    Service = {
+      ExecStart = "${zn.writeBashScriptBin' "sxhkd.launch" [pkgs.sxhkd] ''
+        export PATH=${pkgs.sxhkd}/bin:$PATH
+        sxhkd
+      ''}/bin/sxhkd.launch";
       Restart = "always";
     };
   };
