@@ -155,7 +155,12 @@ in {
       doTheThing "$@" & disown
     '')
   ];
-  home.file = { };
+  home.file = {
+    ".face.icon" = {
+      source = mkDomainSymlink "./static/face.icon";
+      recursive = false;
+    };
+  };
   home.sessionVariables = envExtra // {
     DZ_NVIM_CONFIG_CHECKOUT_PATH = this.checkouts.dz-nvim-config;
     DZ_HOME_MANAGER_CHECKOUT_PATH = this.checkouts.dz-home-manager;
