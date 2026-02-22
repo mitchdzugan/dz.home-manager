@@ -87,6 +87,7 @@ in {
     nixfmt
     pandoc
     prettier
+    python3
     ripgrep
     rlwrap
     rofi
@@ -105,6 +106,7 @@ in {
       busted
       fennel
     ]))
+    (config.lib.nixGL.wrap pkgs.kitty)
     (config.lib.nixGL.wrap pkgs.vesktop)
     (config.lib.nixGL.wrap pkgs.pear-desktop)
     (config.lib.nixGL.wrap pkgs.neovide)
