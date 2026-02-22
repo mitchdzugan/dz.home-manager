@@ -86,6 +86,7 @@ in {
     nixd
     nixfmt
     pandoc
+    prettier
     ripgrep
     rlwrap
     rofi
@@ -303,7 +304,7 @@ in {
       "enable" "defaultEditor" "viAlias" "vimAlias" "vimdiffAlias" "withNodeJs" "withPython3" "withRuby"
     ]))
   );
-  programs.plasma = (import ./domain/kdeplasma/config.nix).programs.plasma;
+  # programs.plasma = (import ./domain/kdeplasma/config.nix).programs.plasma;
   programs.rofi = {
     enable = true;
     theme = ./domain/rofi/theme.rasi;

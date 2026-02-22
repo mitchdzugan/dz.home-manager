@@ -1,43 +1,31 @@
-[ButtonColors]
-ButtonBackgroundOpacityActive=40
-ButtonIconOpacityInactive=80
-CloseButtonIconColorActive=AsSelected
-CloseButtonIconColorInactive=AsSelected
-OnPoorIconContrastActive=BlackWhite
-PoorBackgroundContrastThresholdActive=1.7
-PoorIconContrastThresholdActive=1.7
-UseHoverAccentActive=true
+[Exceptions]
+ExceptionWindowPropertyPattern=.*
 
 [Global]
 LookAndFeelSet=Dr460nized
+RefreshedConfig=6.5.2
 
 [ShadowStyle]
 ShadowSize=ShadowSmall
-ShadowStrength=204
+ShadowStrength=51
 
 [Style]
 FrameCornerRadius=FCR_Custom
 FrameCustomCornerRadius=0
 
-[TitleBarOpacity]
-InactiveTitleBarOpacity=70
-
 [Windeco]
-BoldButtonIcons=BoldIconsHiDpiOnly
-ButtonShape=ShapeIntegratedRoundedRectangleGrouped
-DrawBackgroundGradient=true
-IconSize=IconSmall
 WindowCornerRadius=0
 
 [Windeco Exception 0]
 BorderSize=0
 Enabled=true
 ExceptionBorder=false
+ExceptionMatchTitleBarToApplicationColor=false
 ExceptionPreset=
 ExceptionProgramNamePattern=
 ExceptionWindowPropertyPattern=.*
 ExceptionWindowPropertyType=0
-HideTitleBar=true
+HideTitleBar=1
 OpaqueTitleBar=false
 PreventApplyOpacityToHeader=false
 
@@ -47,9 +35,8 @@ ThinWindowOutlineCustomColorInactive=48,0,61
 ThinWindowOutlineStyleActive=WindowOutlineAccentWithContrast
 ThinWindowOutlineStyleInactive=WindowOutlineShadowColor
 ThinWindowOutlineThickness=2
-WindowOutlineAccentColorOpacityActive=100
-WindowOutlineAccentWithContrastOpacityActive=100
-WindowOutlineContrastOpacityActive=77
-WindowOutlineContrastOpacityInactive=100
-WindowOutlineCustomWithContrastOpacityActive=100
-WindowOutlineShadowColorOpacity=100
+WindowOutlineAccentColorOpacityActive=80
+WindowOutlineContrastOpacityInactive=60
+WindowOutlineShadowColorOpacity=80
+WindowOutlineStyleActive=WindowOutlineAccentColor
+WindowOutlineStyleInactive=WindowOutlineContrast
