@@ -43,6 +43,12 @@ let
   mkZkm = n: f: zn.writeBashScriptBin' n [zkmPkg f] ''
     ${zkmPkg}/bin/zkm ${f}
   '';
+  /*
+  luajit = (pkgs.luajit.withPackages (luaPackages: with luaPackages; [
+    busted
+    fennel
+  ]));
+  */
 in {
   imports = [
     plasma-manager.homeModules.plasma-manager
@@ -81,7 +87,7 @@ in {
     lua-language-server
     lxqt.pavucontrol-qt
     mpc
-    ncmpcpp
+    # ncmpcpp
     networkmanagerapplet
     nix-prefetch-github
     nixd
@@ -104,15 +110,13 @@ in {
     (config.lib.nixGL.wrap inputs.ztr.packages.${pkgs.hostPlatform.system}.ztr)
     zkmPkg
     (mkZkm "home.zkm" ./zkm/home.clj)
-    (luajit.withPackages (luaPackages: with luaPackages; [
-      busted
-      fennel
-    ]))
+    # luajit
+    # (nvim-config.mkPkg pkgs)
     (config.lib.nixGL.wrap pkgs.kitty)
     (config.lib.nixGL.wrap pkgs.vesktop)
     (config.lib.nixGL.wrap pkgs.pear-desktop)
     (config.lib.nixGL.wrap pkgs.neovide)
-    (mitch-utils.mkFnlFmt pkgs.luajit)
+    # (mitch-utils.mkFnlFmt luajit)
     (mitch-utils.mkNixWork pkgs)
     (zn.writeBashScriptBin "lvim" ''
       export DZ_NVIM_CONFIG_USE_LOCAL=no
