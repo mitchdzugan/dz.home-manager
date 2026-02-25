@@ -1,5 +1,8 @@
 super + Return
   kitty
 
+super + slash
+  rofi -show drun
+
 super + w
   firefox

@@ -61,6 +61,7 @@ in {
     blueman
     brightnessctl
     bundler
+    cava
     direnv
     emacs
     fastfetch
@@ -85,6 +86,7 @@ in {
     nix-prefetch-github
     nixd
     nixfmt
+    nodejs
     pandoc
     prettier
     python3

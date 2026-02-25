@@ -338,7 +338,7 @@ function configure_my_tide
   set -gx tide_pwd_bg_color $__color_bg_main
   set -gx tide_pwd_color_anchors $__color_fg_info
   set -gx tide_pwd_color_dirs $__color_fg_succ
-  set -gx tide_pwd_color_truncated_dirs $__color_fg_light
+  set -gx tide_pwd_color_truncated_dirs $__color_fg_white
   set -gx tide_pwd_icon ""
   set -gx tide_pwd_icon_home ""
   set -gx tide_pwd_icon_unwritable ""
