@@ -20,22 +20,21 @@ function fish_greeting
   set -l pr 1
   set -l pt 1
   ####
-  set -l pix_dims (kitten icat --print-window-size | string split x)
-  set -l cw (tput cols)
-  set -l ch (tput lines)
-  set -l pw $pix_dims[1]
-  set -l ph $pix_dims[2]
-  set -l w (math "floor(38 * $pw / $cw)")
-  set -l h (math "floor(20 * $ph / $ch)")
-  set -l lw (math "$pr + $tw")
-  set -l lh (math "$pt + $th")
-
   if test "$DZ_FISH_SKIP_FASTFETCH" != "yes"
+    set -l pix_dims (kitten icat --print-window-size | string split x)
+    set -l cw (tput cols)
+    set -l ch (tput lines)
+    set -l pw $pix_dims[1]
+    set -l ph $pix_dims[2]
+    set -l w (math "floor(38 * $pw / $cw)")
+    set -l h (math "floor(20 * $ph / $ch)")
+    set -l lw (math "$pr + $tw")
+    set -l lh (math "$pt + $th")
     begin
-      kitten icat \
-        --align=left \
-        --use-window-size $tw,$th,$w,$h \
-        ~/.config/fastfetch/logo.nix.3.png
+    kitten icat \
+      --align=left \
+      --use-window-size $tw,$th,$w,$h \
+      ~/.config/fastfetch/logo.nix.3.png
     end | fastfetch \
       --raw - \
       --logo-width $lw \
@@ -407,11 +406,14 @@ function configure_my_tide
   set_color $tide_git_color_branch | read -gx _tide_location_color
 end
 
-set -l kitty_bg_parts (kitty @ get-colors | grep "^background " | string split -n ' ')
-set -gx KITTY_BG_COLOR $kitty_bg_parts[2]
-set -gx DZ_KITTY_PRIMARY_WINDOW_ID "$DZ_KITTY_PRIMARY_WINDOW_ID"
-if [ "$DZ_KITTY_WINDOW_IS_SECONDARY" != "1" ]
-  set -gx DZ_KITTY_PRIMARY_WINDOW_ID "$KITTY_WINDOW_ID"
+
+if test "$DZ_FISH_SKIP_FASTFETCH" != "yes"
+  set -l kitty_bg_parts (kitty @ get-colors | grep "^background " | string split -n ' ')
+  set -gx KITTY_BG_COLOR $kitty_bg_parts[2]
+  set -gx DZ_KITTY_PRIMARY_WINDOW_ID "$DZ_KITTY_PRIMARY_WINDOW_ID"
+  if [ "$DZ_KITTY_WINDOW_IS_SECONDARY" != "1" ]
+    set -gx DZ_KITTY_PRIMARY_WINDOW_ID "$KITTY_WINDOW_ID"
+  end
 end
 
 configure_my_tide

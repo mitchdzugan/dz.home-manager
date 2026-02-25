@@ -76,6 +76,7 @@ in {
     fzf
     gh
     github-desktop
+    git
     google-cloud-sdk
     grc
     htop
